@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: springboot-app
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
